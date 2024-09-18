@@ -84,7 +84,10 @@ local function create_new(path, name)
 end
 
 local function open_card(file)
+	-- Create a new buffer for the floating window
 	local buf = vim.api.nvim_create_buf(false, true)
+
+	-- Open a floating window attached to the new buffer
 	local win = vim.api.nvim_open_win(buf, true, {
 		relative = "editor",
 		width = 80,
@@ -108,9 +111,22 @@ local function open_card(file)
 	-- Optionally scroll to the end of the file
 	vim.api.nvim_command("normal! G")
 
-	-- Close the window on <Esc> or <q>
-	vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", "<cmd>close<CR>", { noremap = true, silent = true })
-	vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+	-- Close the window and wipe the buffer on <Esc> or <q>
+	local function close_window()
+		vim.api.nvim_win_close(win, true) -- Close the window
+		vim.api.nvim_buf_delete(buf, { force = true }) -- Wipe the buffer
+	end
+
+	vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", "", {
+		noremap = true,
+		silent = true,
+		callback = close_window,
+	})
+	vim.api.nvim_buf_set_keymap(buf, "n", "q", "", {
+		noremap = true,
+		silent = true,
+		callback = close_window,
+	})
 end
 
 local function picker(files, handler)
