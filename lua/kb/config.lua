@@ -5,7 +5,7 @@ O.options = {
 }
 
 function O.setup(user_opts)
-	O.options = vim.tbl_deep_extend("force", options, user_opts or {})
+	O.options = vim.tbl_deep_extend("force", O.options, user_opts or {})
 end
 
 return O
