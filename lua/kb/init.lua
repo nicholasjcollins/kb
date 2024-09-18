@@ -95,11 +95,22 @@ local function open_card(file)
 		style = "minimal",
 		border = "rounded",
 	})
-	vim.api.nvim_buf_set_option(buf, "buftype", "")
-	vim.api.nvim_buf_set_option(buf, "modifiable", true)
-	vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
-	vim.cmd("e " .. vim.fn.fnameescape(file))
+
+	-- Set buffer options to make it temporary
+	vim.bo[buf].buftype = "nofile"
+	vim.bo[buf].bufhidden = "wipe"
+	vim.bo[buf].modifiable = true
+	vim.bo[buf].filetype = "markdown"
+
+	-- Open the specified file content in the new buffer
+	vim.cmd("edit " .. vim.fn.fnameescape(file))
+
+	-- Optionally scroll to the end of the file
 	vim.api.nvim_command("normal! G")
+
+	-- Close the window on <Esc> or <q>
+	vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", "<cmd>close<CR>", { noremap = true, silent = true })
+	vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
 end
 
 local function picker(files, handler)
