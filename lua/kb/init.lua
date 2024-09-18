@@ -167,7 +167,7 @@ function R.wikihover()
 	end
 end
 
-setup = function(user_opts)
+R.setup = function(user_opts)
 	config.setup(user_opts)
 end
 
