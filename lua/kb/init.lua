@@ -171,4 +171,12 @@ R.setup = function(user_opts)
 	config.setup(user_opts)
 end
 
+vim.api.nvim_create_user_command(
+	"WikiHover",
+	function()
+		R.wikihover()
+	end,
+	{} -- Optional command options
+)
+
 return R
